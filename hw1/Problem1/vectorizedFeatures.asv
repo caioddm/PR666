@@ -1,0 +1,17 @@
+function [vector] = vectorizedFeatures(feat)    
+    x = size(feat, 1);
+    y = size(feat, 2);
+    vector1 = zeros(1,x);
+    vector2 = zeros(1,x);
+    vector3 = zeros(1,x);
+    vector4 = zeros(1,x);
+    counter = 0;
+    for idx = 1:x
+        vector1(1, (floor(counter/x))*x + idy) = feat(idx, idy, 1);
+        vectorG(1, (floor(counter/x))*x + idy) = feat(idx, idy, 2);
+        vectorB(1, (floor(counter/x))*x + idy) = feat(idx, idy, 3);
+        counter = counter + 1;
+    end
+    
+    vector = [vectorR, vectorG, vectorB];
+end
