@@ -2,7 +2,7 @@ function [feature] = extractAreas(imgnames)
     feature = zeros(length(imgnames),1);
     for idx = 1:length(imgnames)
         [img] = imresize(imread(imgnames(idx).name), [NaN 32]);
-        grayImg = rgb2gray(img);
+        grayImg = imbinarize(rgb2gray(img));
         feature(idx,1) = getPartArea(grayImg);
 
     end
@@ -22,7 +22,7 @@ function [totalArea] = getPartArea(grayImg)
             else
                 difference = abs(bgAverage - grayImg(idx,idy,1));
             end
-            if(difference > threshold)
+            if(grayImg(idx,idy,1) == 0)
                 totalArea = totalArea + 1;
             end
         end

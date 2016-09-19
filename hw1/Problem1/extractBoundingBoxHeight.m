@@ -2,7 +2,7 @@ function [feature] = extractBoundingBoxHeight(imgnames)
     feature = zeros(length(imgnames),1);
     for idx = 1:length(imgnames)
         [img] = imresize(imread(imgnames(idx).name), [NaN 32]);
-        grayImg = rgb2gray(img);
+        grayImg = imbinarize(rgb2gray(img));
         feature(idx,1) = getPartHeight(grayImg);
 
     end
@@ -24,7 +24,7 @@ function [longestHeight] = getPartHeight(grayImg)
             else
                 difference = abs(bgAverage - grayImg(idx,idy,1));
             end
-            if(difference > threshold)
+            if(grayImg(idx,idy,1) == 0)
                 if(startY == -1)
                     startY = idx;                
                 else
