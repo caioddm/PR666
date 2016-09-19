@@ -18,13 +18,7 @@ function [longestWidth] = getPartWidth(grayImg)
         startX = -1;
         endX = -1;
         for idy = 1:y            
-            difference = 0;
-            if(grayImg(idx,idy,1) > bgAverage) 
-                difference = abs(grayImg(idx,idy,1) - bgAverage);
-            else
-                difference = abs(bgAverage - grayImg(idx,idy,1));
-            end
-            if(grayImg(idx,idy,1) == 0)
+            if(grayImg(idx,idy) == 0)
                 if(startX == -1)
                     startX = idy;                
                 else

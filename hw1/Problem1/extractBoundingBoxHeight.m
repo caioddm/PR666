@@ -18,13 +18,7 @@ function [longestHeight] = getPartHeight(grayImg)
         startY = -1;
         endY = -1;
         for idx = 1:x            
-            difference = 0;
-            if(grayImg(idx,idy,1) > bgAverage) 
-                difference = abs(grayImg(idx,idy,1) - bgAverage);
-            else
-                difference = abs(bgAverage - grayImg(idx,idy,1));
-            end
-            if(grayImg(idx,idy,1) == 0)
+            if(grayImg(idx,idy) == 0)
                 if(startY == -1)
                     startY = idx;                
                 else
