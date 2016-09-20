@@ -3,12 +3,12 @@ function [feature] = extractPixelIntensityAverage(imgnames)
     for idx = 1:length(imgnames)
         [img] = imread(imgnames(idx).name);
         grayImg = rgb2gray(img);
-        feature(idx,1) = getBlueChannelAverage(grayImg);
+        feature(idx,1) = getPixelAverage(grayImg);
 
     end
 end
 
-function [average] = getBlueChannelAverage(grayImg)
+function [average] = getPixelAverage(grayImg)
     x = size(grayImg, 1);
     average = [];
     for idx = 1:x

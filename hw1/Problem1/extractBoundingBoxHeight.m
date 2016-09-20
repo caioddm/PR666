@@ -2,23 +2,21 @@ function [feature] = extractBoundingBoxHeight(imgnames)
     feature = zeros(length(imgnames),1);
     for idx = 1:length(imgnames)
         [img] = imresize(imread(imgnames(idx).name), [NaN 32]);
-        grayImg = imbinarize(rgb2gray(img));
-        feature(idx,1) = getPartHeight(grayImg);
+        binImg = imbinarize(rgb2gray(img));
+        feature(idx,1) = getPartHeight(binImg);
 
     end
 end
 
-function [longestHeight] = getPartHeight(grayImg)
-    threshold = 90;
-    x = size(grayImg, 1);
-    y = size(grayImg, 2);
-    bgAverage = mean([grayImg(1:3,1);grayImg(1:3,2);grayImg(1:3,3)]); %computes average value for background considering a top left 3x3 matrix    
+function [longestHeight] = getPartHeight(img)
+    x = size(img, 1);
+    y = size(img, 2);
     longestHeight = -1;
     for idy = 1:y
         startY = -1;
         endY = -1;
         for idx = 1:x            
-            if(grayImg(idx,idy) == 0)
+            if(img(idx,idy) == 0)
                 if(startY == -1)
                     startY = idx;                
                 else
