@@ -1,0 +1,11 @@
+function [ val ] = ComputeKDE( x, xk, h )
+if(abs(x - xk/h) < 0.5)    
+    x1 = x - xk/h;
+    val = ((2*pi)^(-1/2))*exp(-1/2*(x1*x1));
+else
+    val = 0;
+end
+end
+
+function [kx] = PointK()
+
