@@ -6,8 +6,8 @@ data = data.x;
 minval = min(data);
 maxval = max(data);
 
-range = (minval-5:.02:maxval+5);
-bandwith = 1;
+range = (-15:1:84);
+bandwith = [0.5 1 4];
 kde = [];
 
 for idx = 1 : length(range)
