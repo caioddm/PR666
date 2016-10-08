@@ -5,7 +5,7 @@ data = data.x;
 
 
 %(a) generate scatter plot from first three dimensions
-figure;
+figure('Position', [100 100 1024 800]);
 scatter3(data(:, 1), data(:, 2), data(:, 3))
 
 %get the covariance matrix from the data
@@ -15,7 +15,7 @@ covmatrix = cov(data);
 [eigenvectors, eigenvalues] = svd(covmatrix);
 
 %(b) plot of the eigenvalues sorted in descending order
-figure('Position', [100 100 1024 800]);
+figure('Position', [200 100 1024 800]);
 
 eigenvalues = diag(eigenvalues);
 sumeig = sum(eigenvalues);
@@ -38,8 +38,13 @@ xlabel('Components (log scaled)');
 title('Amount of data variance captured with the first N components ');
 
 %(c) scatter plot from the first three dimensions of PCA
-figure;
-pcavectors = data * eigenvectors(:, 1:3);
-scatter3(pcavectors(:, 1), pcavectors(:, 2), pcavectors(:, 3))
+figure('Position', [300 100 1024 800]);
+pcavectors = data * eigenvectors(:, 1:4);
+subplot(2, 1, 1);
+scatter3(pcavectors(:, 1), pcavectors(:, 2), pcavectors(:, 3));
+title('Scatter plot of the first three PCA components');
 
+subplot(2, 1, 2);
+scatter3(pcavectors(:, 2), pcavectors(:, 3), pcavectors(:, 4))
+title('Scatter plot of second, third, and fourth PCA components')
 
