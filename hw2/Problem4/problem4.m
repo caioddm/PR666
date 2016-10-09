@@ -76,7 +76,6 @@ for k = 1 : 30
         title('PCA scatter using test data projections');
         hold off;
     end    
-    accuq = [accuq; Classify(train1, test1, train2, test2, train3, test3)];
     
     %classifying data in a 2D PCA
     covmatrix1 = cov(train1);
