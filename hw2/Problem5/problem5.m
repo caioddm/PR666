@@ -30,30 +30,27 @@ set3 = [set3, noise3];
 accuk = [];
 accup = [];
 accul = [];
-for idx = 0 : 10
+plotp = [];
+for idx = 0 : 281
     k = 2*idx + 1;
     for j = 1 : 30
         [train1, test1] = GetRandomSets(set1, 1/4);
         [train2, test2] = GetRandomSets(set2, 1/4);
         [train3, test3] = GetRandomSets(set3, 1/4);
-        accuk = [accuk; Classify(k, train1, test1, train2, test2, train3, test3)];
+        accuk = [accuk; ClassifyKnn(k, train1, test1, train2, test2, train3, test3)];
 
         %computing PCA with training data    
-        covmatrix1 = cov(train1);
-        [eigenvectors1, eigenvalues1] = svd(covmatrix1);
-        pcavectrain1 = train1 * eigenvectors1(:, 1:2);
-        pcavectest1 = test1 * eigenvectors1(:, 1:2);
+        covmatrix = cov([train1; train2; train3]);
+        [eigenvectors, eigenvalues] = svd(covmatrix);
+        pcavectrain1 = train1 * eigenvectors(:, 1:2);
+        pcavectest1 = test1 * eigenvectors(:, 1:2);
 
-        covmatrix2 = cov(train2);
-        [eigenvectors2, eigenvalues2] = svd(covmatrix2);
-        pcavectrain2 = train2 * eigenvectors2(:, 1:2);
-        pcavectest2 = test2 * eigenvectors2(:, 1:2);
+        pcavectrain2 = train2 * eigenvectors(:, 1:2);
+        pcavectest2 = test2 * eigenvectors(:, 1:2);
 
-        covmatrix3 = cov(train3);
-        [eigenvectors3, eigenvalues3] = svd(covmatrix3);
-        pcavectrain3 = train3 * eigenvectors3(:, 1:2);
-        pcavectest3 = test3 * eigenvectors3(:, 1:2);
-        accup = [accup; Classify(k, pcavectrain1, pcavectest1, pcavectrain2, pcavectest2, pcavectrain3, pcavectest3)];
+        pcavectrain3 = train3 * eigenvectors(:, 1:2);
+        pcavectest3 = test3 * eigenvectors(:, 1:2);
+        accup = [accup; ClassifyKnn(k, pcavectrain1, pcavectest1, pcavectrain2, pcavectest2, pcavectrain3, pcavectest3)];
 
 
         %classifying data using LDA
@@ -75,8 +72,9 @@ for idx = 0 : 10
 
         ldatrain3 = train3(:, 1:end-1) * v;
         ldatest3 = test3 * v;
-        accul = [accul; Classify(k, ldatrain1, ldatest1, ldatrain2, ldatest2, ldatrain3, ldatest3)];
+        accul = [accul; ClassifyKnn(k, ldatrain1, ldatest1, ldatrain2, ldatest2, ldatrain3, ldatest3)];
     end
+    
     fprintf('Results for K = %d', k);
     disp(' ');
     fprintf('Mean accuracy for original space: %f', mean(accuk));
@@ -86,4 +84,16 @@ for idx = 0 : 10
     fprintf('Mean accuracy for 2-D LDA space: %f', mean(accul));
     disp(' ');
     disp(' ');
+    plotp = [plotp; k mean(accuk) mean(accup) mean(accul)];
 end
+
+figure('Position', [100 100 1024 800]);
+hold on
+plot(plotp(:,1), plotp(:, 2), 'Color', 'b');
+plot(plotp(:,1), plotp(:, 3), 'Color', 'r');
+plot(plotp(:,1), plotp(:, 4), 'Color', 'g');
+ylabel('Accuracy');
+xlabel('K');
+legend('Original space', 'PCA', 'LDA', 'Location', 'west');
+title('Average Accuracy vs. K size');
+hold off;

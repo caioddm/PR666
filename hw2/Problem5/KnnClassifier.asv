@@ -1,9 +1,0 @@
-function [ label ] = KnnClassifier( data, k, x )
-    dists = pdist2(x, data(:,1:end-1));
-    data = [data, transpose(dists)];
-    [~,sorted_inds] = sort(data(:,length(data(1,:))));
-    sorted = data(sorted_inds,:); 
-    l1 = sum(sorted(1:k, len))
-    label = 1;
-end
-

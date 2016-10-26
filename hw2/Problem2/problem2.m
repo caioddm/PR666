@@ -7,7 +7,7 @@ data = data.x;
 %(a) generate scatter plot from first three dimensions
 figure('Position', [100 100 1024 800]);
 scatter3(data(:, 1), data(:, 2), data(:, 3))
-
+title('Scatter plot using the first three dimensions of the original space')
 %get the covariance matrix from the data
 covmatrix = cov(data);
 

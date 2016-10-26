@@ -34,25 +34,21 @@ for k = 1 : 30
     [train1, test1] = GetRandomSets(set1, 1/4);
     [train2, test2] = GetRandomSets(set2, 1/4);
     [train3, test3] = GetRandomSets(set3, 1/4);
-    accuq = [accuq; Classify(train1, test1, train2, test2, train3, test3)];
+    accuq = [accuq; ClassifyQuadratic(train1, test1, train2, test2, train3, test3)];
     
     %computing PCA with training data
     
     if(k == 1) %plot 3D PCA projections on the first iteration
-        covmatrix1 = cov(train1);
-        [eigenvectors1, eigenvalues1] = svd(covmatrix1);
-        pcavectrain1 = train1 * eigenvectors1(:, 1:3);
-        pcavectest1 = test1 * eigenvectors1(:, 1:3);
+        covmatrix = cov([train1; train2; train3]);
+        [eigenvectors, eigenvalues] = svd(covmatrix);
+        pcavectrain1 = train1 * eigenvectors(:, 1:3);
+        pcavectest1 = test1 * eigenvectors(:, 1:3);
 
-        covmatrix2 = cov(train2);
-        [eigenvectors2, eigenvalues2] = svd(covmatrix2);
-        pcavectrain2 = train2 * eigenvectors2(:, 1:3);
-        pcavectest2 = test2 * eigenvectors2(:, 1:3);
+        pcavectrain2 = train2 * eigenvectors(:, 1:3);
+        pcavectest2 = test2 * eigenvectors(:, 1:3);
 
-        covmatrix3 = cov(train3);
-        [eigenvectors3, eigenvalues3] = svd(covmatrix3);
-        pcavectrain3 = train3 * eigenvectors3(:, 1:3);
-        pcavectest3 = test3 * eigenvectors3(:, 1:3);
+        pcavectrain3 = train3 * eigenvectors(:, 1:3);
+        pcavectest3 = test3 * eigenvectors(:, 1:3);
         figure('Position', [100 100 1024 800]);
         hold on
         subplot(2,1,1);
@@ -78,21 +74,17 @@ for k = 1 : 30
     end    
     
     %classifying data in a 2D PCA
-    covmatrix1 = cov(train1);
-    [eigenvectors1, eigenvalues1] = svd(covmatrix1);
-    pcavectrain1 = train1 * eigenvectors1(:, 1:2);
-    pcavectest1 = test1 * eigenvectors1(:, 1:2);
+    covmatrix = cov([train1; train2; train3]);
+    [eigenvectors, eigenvalues] = svd(covmatrix);
+    pcavectrain1 = train1 * eigenvectors(:, 1:2);
+    pcavectest1 = test1 * eigenvectors(:, 1:2);
 
-    covmatrix2 = cov(train2);
-    [eigenvectors2, eigenvalues2] = svd(covmatrix2);
-    pcavectrain2 = train2 * eigenvectors2(:, 1:2);
-    pcavectest2 = test2 * eigenvectors2(:, 1:2);
+    pcavectrain2 = train2 * eigenvectors(:, 1:2);
+    pcavectest2 = test2 * eigenvectors(:, 1:2);
 
-    covmatrix3 = cov(train3);
-    [eigenvectors3, eigenvalues3] = svd(covmatrix3);
-    pcavectrain3 = train3 * eigenvectors3(:, 1:2);
-    pcavectest3 = test3 * eigenvectors3(:, 1:2);
-    accup = [accup; Classify(pcavectrain1, pcavectest1, pcavectrain2, pcavectest2, pcavectrain3, pcavectest3)];
+    pcavectrain3 = train3 * eigenvectors(:, 1:2);
+    pcavectest3 = test3 * eigenvectors(:, 1:2);
+    accup = [accup; ClassifyQuadratic(pcavectrain1, pcavectest1, pcavectrain2, pcavectest2, pcavectrain3, pcavectest3)];
     
     
     %classifying data using LDA
@@ -151,7 +143,7 @@ for k = 1 : 30
 
     ldatrain3 = train3(:, 1:end-1) * v;
     ldatest3 = test3 * v;
-    accul = [accul; Classify(ldatrain1, ldatest1, ldatrain2, ldatest2, ldatrain3, ldatest3)];
+    accul = [accul; ClassifyQuadratic(ldatrain1, ldatest1, ldatrain2, ldatest2, ldatrain3, ldatest3)];
 end
 
 fprintf('Mean accuracy for original space: %f', mean(accuq));

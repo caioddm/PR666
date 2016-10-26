@@ -25,26 +25,24 @@ set2 = [set2, noise2];
 noise3 = normrnd(1, 6, 250, 48);
 set3 = [set3, noise3];
 
-figure;
+figure('Position', [100 100 1024 800]);
+subplot(2,1,1);
 hold on
 %(a) compute first two PCA components and plot scatter
-covmatrix1 = cov(set1);
-[eigenvectors1, eigenvalues1] = svd(covmatrix1);
-pcavectors1 = set1 * eigenvectors1(:, 1:2);
+covmatrix = cov([set1;set2;set3]);
+[eigenvectors, eigenvalues] = svd(covmatrix);
+pcavectors1 = set1 * eigenvectors(:, 1:2);
 text(pcavectors1(:,1), pcavectors1(:,2), '1', 'color', 'b');
 scatter(pcavectors1(:,1), pcavectors1(:,2), 0.01);
 
-covmatrix2 = cov(set2);
-[eigenvectors2, eigenvalues2] = svd(covmatrix2);
-pcavectors2 = set2 * eigenvectors2(:, 1:2);
+pcavectors2 = set2 * eigenvectors(:, 1:2);
 text(pcavectors2(:,1), pcavectors2(:,2), '2', 'color', 'r');
 scatter(pcavectors2(:,1), pcavectors2(:,2), 0.01);
 
-covmatrix3 = cov(set3);
-[eigenvectors3, eigenvalues3] = svd(covmatrix3);
-pcavectors3 = set3 * eigenvectors3(:, 1:2);
+pcavectors3 = set3 * eigenvectors(:, 1:2);
 text(pcavectors3(:,1), pcavectors3(:,2), '3', 'color', 'g');
 scatter(pcavectors3(:,1), pcavectors3(:,2), 0.01);
+title('2-D scatter of the first two components of PCA');
 hold off
 
 %(b) compute LDA and plot scatter
@@ -58,7 +56,7 @@ dataset = [set1; set2; set3];
 
 [y, v, d] = tamu_lda(dataset(:,1:end-1), dataset(:, end));
 
-figure;
+subplot(2,1,2);
 hold on
 text(y(1:250,1), y(1:250,2), '1', 'color', 'b');
 scatter(y(1:250,1), y(1:250,2), 0.01);
@@ -66,4 +64,5 @@ text(y(251:500,1), y(251:500,2), '2', 'color', 'r');
 scatter(y(251:500,1), y(251:500,2), 0.01);
 text(y(501:750,1), y(501:750,2), '3', 'color', 'g');
 scatter(y(501:750,1), y(501:750,2), 0.01);
+title('2-D scatter using LDA')
 hold off
