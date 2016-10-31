@@ -1,0 +1,47 @@
+clear; clc;
+addpath(genpath(pwd));
+%load training data
+data = load('hw2p4_train.mat');
+train_labels = data.clab1;
+train_data = data.x1;
+train_data = [train_data, train_labels];
+%replace missing features with averages
+for col=1:46
+    vals = train_data(train_data(:, col) ~= -1,col);
+    m = mean(vals);
+    train_data(train_data(:, col) == -1, col) = m;
+end
+
+%load test data
+data = load('hw2p4_test.mat');
+test_labels = data.clab2;
+test_data = data.x2;
+test_data = [test_data, test_labels];
+%replace missing features with averages
+for col=1:46
+    vals = test_data(test_data(:, col) ~= -1,col);
+    m = mean(vals);
+    test_data(test_data(:, col) == -1, col) = m;
+end
+
+features_idx = [1 28 32];
+train_data = [train_data(:, features_idx), train_data(:, end)];
+test_data = [test_data(:, features_idx), test_data(:, end)];
+
+for j = 1 : length(test_data(:,1))    
+    class = KnnClassifier(train_data, test_data(j,1:end-1), prior1);
+    val2 = QuadraticClassifier(ldatrain2, ldatest(j,:), prior2);
+    val3 = QuadraticClassifier(ldatrain3, ldatest(j,:), prior3);
+    [val, class] = max([val1; val2; val3]);
+    %append assigned class into the uclab col vector
+    uclab = [uclab; class];
+end
+
+%validate results comparing with the correct classes
+%correct = test_labels(:,1) == uclab(:,1);
+%correct = sum(correct)/length(uclab(:,1));
+%fprintf('Classification accuracy: %f\n', correct);
+
+disp('uclab = [');
+disp(uclab);
+disp('];')

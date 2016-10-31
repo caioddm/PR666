@@ -1,0 +1,25 @@
+function [ label ] = KnnClassifier( data, k, x, numclasses )
+    dists = pdist2(x, data(:, 1:end-1)); %this line is not working on unix
+    %matlab
+    dists2 = zeros(length(data(:,1)), 1);
+    appended = [x; data(:, 1:end-1)];
+    for ex=1:length(data(:,1))
+        dists2(ex, 1) = pdist(x, data(ex, :));
+    end
+    
+    data2 = data(:, 1:end-1);
+    dists = sqrt( bsxfun(@plus,sum(x.^2,2),sum(data2.^2,2)') - 2*(x*data2') );
+    data = [data, transpose(dists)];
+    [sorted_rows,sorted_inds] = sort(data(:,length(data(1,:))));
+    sorted = data(sorted_inds,:);
+    maxneig = 0;
+    label = -1;
+    for c = 1:numclasses
+        neigs = sum(sorted(1:k, length(data(1,:))-1) == c);
+        if(neigs > maxneig)
+            maxneig = neigs;
+            label = c;
+        end
+    end    
+end
+
